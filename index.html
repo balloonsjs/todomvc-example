@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en" data-framework="balloonsjs">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>BalloonsJS • TodoMVC</title>
+        <link rel="stylesheet" href="bower_components/todomvc-common/base.css">
+    </head>
+    <body>
+
+        <section id="todoapp">
+            <header id="header">
+                <h1>todos</h1>
+                <input id="new-todo" placeholder="What needs to be done?" autofocus>
+            </header>
+            <section id="main">
+                <!--input id="toggle-all" type="checkbox"-->
+                <label for="toggle-all">Mark all as complete</label>
+                <ul id="todo-list"></ul>
+            </section>
+            <footer id="footer" hidden>
+                <span id="todo-count"></span>
+                <!--ul id="filters">
+                    <li>
+                        <a id="all" href="#/">All</a>
+                    </li>
+                    <li>
+                        <a id="active" href="#/active">Active</a>
+                    </li>
+                    <li>
+                        <a id="completed" href="#/completed">Completed</a>
+                    </li>
+                </ul-->
+                <button id="clear-completed" hidden>Clear completed (<span id="completed-count"></span>)</button>
+            </footer>
+        </section>
+
+        <footer id="info">
+            <!--p>Double-click to edit a todo</p-->
+            <p>Created by <a href="http://twitter.com/pazguille">Guille Paz</a></p>
+            <p>Part of <a href="http://todomvc.com">TodoMVC</a> (Coming soon)</p>
+        </footer>
+
+
+
+        <script id="view" type="text/template" hidden>
+            <li data-task=":{id}" class=":{status}">
+                <div class="view">
+                    <input class="toggle" type="checkbox" :{checked}>
+                    <label>:{text}</label>
+                    <button class="destroy"></button>
+                </div>
+            </li>
+        </script>
+
+        <!--script src="bower_components/todomvc-common/base.js"></script-->
+        <script src="js/balloons.js"></script>
+        <script src="js/Templit.js"></script>
+        <script src="js/model.js"></script>
+        <script src="js/presenter.js"></script>
+    </body>
+</html>
