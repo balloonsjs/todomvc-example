@@ -10,14 +10,14 @@
         this.todo = new Todo();
 
         // Defines user interaction
-        this.userInteraction();
+        this.userEvents();
 
         // Defines model events
         this.modelEvents();
 
     };
 
-    Presenter.prototype.userInteraction = function () {
+    Presenter.prototype.userEvents = function () {
 
         var that = this;
 
