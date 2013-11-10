@@ -92,6 +92,11 @@
                 footer.setAttribute('hidden');
                 clearCompleted.setAttribute('hidden');
             }
+
+            if (that.todo.count('completed') === 0) {
+                clearCompleted.setAttribute('hidden');
+            }
+
         });
 
         this.todo.on('toggle', function () {
