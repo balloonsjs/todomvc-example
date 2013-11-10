@@ -88,13 +88,12 @@
 
             completedCount.innerHTML = that.todo.count('completed');
 
-            if (that.todo.count('active') === 0) {
-                footer.setAttribute('hidden');
+            if (that.todo.count('completed') === 0) {
                 clearCompleted.setAttribute('hidden');
             }
 
-            if (that.todo.count('completed') === 0) {
-                clearCompleted.setAttribute('hidden');
+            if (that.todo.size() === 0) {
+                footer.setAttribute('hidden');
             }
 
         });
