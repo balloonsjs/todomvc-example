@@ -39,6 +39,10 @@
                 taskID = parseInt(el.parentNode.parentNode.dataset.task, 10);
                 that.todo.toggle(taskID);
             }
+
+            if (el.id === 'toggle-all') {
+                that.todo.toggleAll(el.checked);
+            }
         });
 
         document.querySelector('#new-todo').addEventListener('keyup', function (eve) {
@@ -66,11 +70,15 @@
         var that = this,
             footer = document.querySelector('#footer'),
             count = document.querySelector('#todo-count'),
+            toggleAll = document.querySelector('#toggle-all'),
             clearCompleted = document.querySelector('#clear-completed'),
             completedCount = document.querySelector('#completed-count');
 
         this.todo.on('add', function() {
             render.use('#view').into('#todo-list').fill(that.todo.items());
+
+            toggleAll.removeAttribute('hidden');
+            toggleAll.checked = false;
 
             footer.removeAttribute('hidden');
 
@@ -93,6 +101,8 @@
             }
 
             if (that.todo.size() === 0) {
+                toggleAll.checked = false;
+                toggleAll.setAttribute('hidden');
                 footer.setAttribute('hidden');
             }
 
@@ -108,8 +118,10 @@
 
             if (that.todo.count('completed') === 0) {
                 clearCompleted.setAttribute('hidden', 'hidden');
+
             } else {
                 clearCompleted.removeAttribute('hidden');
+                toggleAll.checked = (that.todo.count('active') === 0);
             }
         });
 

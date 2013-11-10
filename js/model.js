@@ -6,8 +6,8 @@
             'completed': 'active'
         },
         checked = {
-            '': 'checked',
-            'checked': ''
+            'active': '',
+            'completed': 'checked'
         };
 
     function Todo() {
@@ -59,9 +59,25 @@
         for (i; i < len; i += 1) {
             if (tasks[i].id === id) {
                 tasks[i].status = toggle[tasks[i].status];
-                tasks[i].checked = checked[tasks[i].checked];
+                tasks[i].checked = checked[tasks[i].status];
                 break;
             }
+        }
+
+        this.emit('toggle');
+
+        return this;
+    };
+
+    Todo.prototype.toggleAll = function (completed) {
+        var tasks = this._collection,
+            i = 0,
+            len = tasks.length,
+            status = (completed) ? 'completed': 'active';
+
+        for (i; i < len; i += 1) {
+            tasks[i].status = status;
+            tasks[i].checked = checked[status];
         }
 
         this.emit('toggle');
