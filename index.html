@@ -5,6 +5,13 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>BalloonsJS • TodoMVC</title>
         <link rel="stylesheet" href="bower_components/todomvc-common/base.css">
+        <style>
+            .heart {
+                font-style: normal;
+                font-weight: 500;
+                color: #c0392b;
+            }
+        </style>
     </head>
     <body>
 
@@ -37,11 +44,11 @@
 
         <footer id="info">
             <!--p>Double-click to edit a todo</p-->
-            <p>Created by <a href="http://twitter.com/pazguille">Guille Paz</a></p>
+            <p>Created by <a href="http://twitter.com/pazguille">Guille Paz</a> with <i class="heart">❤</i></p>
             <p>Part of <a href="http://todomvc.com">TodoMVC</a> (Coming soon)</p>
         </footer>
 
-
+        <a href="https://github.com/balloonsjs/todomvc-example"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_left_darkblue_121621.png" width="149" height="149" alt="Fork me on GitHub"></a>
 
         <script id="view" type="text/template" hidden>
             <li data-task=":{id}" class=":{status}">
@@ -52,6 +59,8 @@
                 </div>
             </li>
         </script>
+
+
 
         <!--script src="bower_components/todomvc-common/base.js"></script-->
         <script src="js/balloons.js"></script>
