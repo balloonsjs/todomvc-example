@@ -1,13 +1,12 @@
 (function (window) {
     'use strict';
 
-    // Template engine
-    var render = new Templit();
-
     function Presenter() {
 
         // Defines a new Todo model
         this.todo = new Todo();
+
+        this.template = new Templit('#view', '#todo-list');
 
         // Defines user interaction
         this.userEvents();
@@ -75,7 +74,7 @@
             completedCount = document.querySelector('#completed-count');
 
         this.todo.on('add', function() {
-            render.use('#view').into('#todo-list').fill(that.todo.items());
+            that.template.render(that.todo.items());
 
             toggleAll.removeAttribute('hidden');
             toggleAll.checked = false;
@@ -86,11 +85,11 @@
         });
 
         this.todo.on('edit', function() {
-            render.use('#view').into('#todo-list').fill(that.todo.items());
+            that.template.render(that.todo.items());
         });
 
         this.todo.on('remove', function() {
-            render.use('#view').into('#todo-list').fill(that.todo.items());
+            that.template.render(that.todo.items());
 
             count.innerHTML = that.todo.count('active');
 
@@ -110,7 +109,7 @@
 
         this.todo.on('toggle', function () {
 
-            render.use('#view').into('#todo-list').fill(that.todo.items());
+            that.template.render(that.todo.items());
 
             count.innerHTML = that.todo.count('active');
 

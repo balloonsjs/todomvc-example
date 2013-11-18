@@ -1,1 +1,87 @@
-!function(a){"use strict";function i(a,b){return a.innerHTML.replace(/:\{([a-zA-Z0-9\.]+)\}/gm,function(){function e(a){d=d[a]}var d,a=arguments[1],c=arguments[1].split(".");return c.length>1&&(d=b,c.forEach(e)),d=void 0!==b[a]?b[a]:d})}function j(a,b,d){var e=this;return a&&e.use(a),b?e.into(b):e.container=c,d&&e.fill(d),e}var b=a.document,c=b.body,d=a.Object,e=a.Array,h=(b.createDocumentFragment(),e.prototype.forEach,function(){return"function"==typeof e.isArray?e.isArray:function(a){return"[object Array]"===d.prototype.toString.call(a)}}());j.prototype.use=function(a){return this.template=b.querySelector(a),this},j.prototype.into=function(a){return this.container=b.querySelector(a||c),this},j.prototype.fill=function(a){var b=this,c="";return a=h(a)?a:[a],a.forEach(function(a){c+=i(b.template.cloneNode(!0),a)}),b.container.innerHTML=c,b},a.Templit=j}(this);
+(function (window) {
+    'use strict';
+
+    var doc = window.document,
+        Arr = window.Array,
+        isArray = (function () {
+            if (typeof Arr.isArray === 'function') {
+                return Arr.isArray;
+            }
+
+            return function (obj) {
+                return (window.Object.prototype.toString.call(obj) === '[object Array]');
+            };
+        }()),
+        regexp = new RegExp(':{([a-zA-Z0-9.]+)}', 'gm');
+
+    function render(tpl, data) {
+
+        return tpl.innerHTML.replace(regexp, function () {
+            var key = arguments[1],
+                keys = key.split('.'),
+                value;
+
+
+            function defineValue(k) {
+                value = value[k];
+            }
+
+            if (keys.length > 1) {
+                value = data;
+                keys.forEach(defineValue);
+            }
+
+            value = (data[key] !== undefined) ? data[key] : value;
+
+            return value;
+        });
+    }
+
+    function Templit(template, container, data) {
+
+        if (template) {
+            this.use(template);
+        }
+
+        if (container) {
+            this.into(container);
+        }
+
+        if (data) {
+            this.render(data);
+        }
+
+        return this;
+    }
+
+    Templit.prototype.use = function (template) {
+        this.template = doc.querySelector(template);
+
+        return this;
+    };
+
+    Templit.prototype.into = function (container) {
+        this.container = doc.querySelector(container);
+
+        return this;
+    };
+
+    Templit.prototype.render = function (data) {
+        var that = this,
+            html = [];
+
+        data = isArray(data) ? data : [data];
+
+        data.forEach(function (data) {
+            html.push(render(that.template.cloneNode(true), data));
+        });
+
+        this.container.innerHTML = html.join('');
+
+        return this;
+
+    };
+
+    window.Templit = Templit;
+
+}(this));

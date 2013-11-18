@@ -27,10 +27,14 @@ function require(path, parent, orig) {
   // perform real require()
   // by invoking the module's
   // registered function
-  if (!module.exports) {
-    module.exports = {};
-    module.client = module.component = true;
-    module.call(this, module.exports, require.relative(resolved), module);
+  if (!module._resolving && !module.exports) {
+    var mod = {};
+    mod.exports = {};
+    mod.client = mod.component = true;
+    module._resolving = true;
+    module.call(this, mod.exports, require.relative(resolved), mod);
+    delete module._resolving;
+    module.exports = mod.exports;
   }
 
   return module.exports;
@@ -651,7 +655,7 @@ Component.prototype.destroy = function () {
 // Expose Component
 module.exports = Component;
 });
-require.register("balloon/index.js", function(exports, require, module){
+require.register("balloons/index.js", function(exports, require, module){
 'use strict';
 
 // Module dependencies
@@ -662,84 +666,85 @@ var clone = require('clone'),
     Component = require('Component'),
     Q = {};
 
+// Version
 Q.version = '0.0.1';
 
+// Utils
 Q.util = {
     'clone': clone,
     'extend': extend,
     'inherits': inherits
 };
 
+// Observable
 Q.observable = function (component) {
     inherits(component, EventEmitter);
 
     return Q;
-}
+};
 
+// Component
 Q.component = function (component) {
     inherits(component, Component);
 
     return Q;
 };
 
-// Expose Component
+// Expose Balloons
 module.exports = Q;
 });
-require.alias("balloonsjs-clone/index.js", "balloon/deps/clone/index.js");
-require.alias("balloonsjs-clone/index.js", "balloon/deps/clone/index.js");
+
+
+
+
+
+
+
+
+
+
+require.alias("balloonsjs-clone/index.js", "balloons/deps/clone/index.js");
+require.alias("balloonsjs-clone/index.js", "balloons/deps/clone/index.js");
 require.alias("balloonsjs-clone/index.js", "clone/index.js");
 require.alias("balloonsjs-clone/index.js", "balloonsjs-clone/index.js");
-
-require.alias("balloonsjs-extend/index.js", "balloon/deps/extend/index.js");
-require.alias("balloonsjs-extend/index.js", "balloon/deps/extend/index.js");
+require.alias("balloonsjs-extend/index.js", "balloons/deps/extend/index.js");
+require.alias("balloonsjs-extend/index.js", "balloons/deps/extend/index.js");
 require.alias("balloonsjs-extend/index.js", "extend/index.js");
 require.alias("balloonsjs-extend/index.js", "balloonsjs-extend/index.js");
-
-require.alias("balloonsjs-inherits/index.js", "balloon/deps/inherits/index.js");
-require.alias("balloonsjs-inherits/index.js", "balloon/deps/inherits/index.js");
+require.alias("balloonsjs-inherits/index.js", "balloons/deps/inherits/index.js");
+require.alias("balloonsjs-inherits/index.js", "balloons/deps/inherits/index.js");
 require.alias("balloonsjs-inherits/index.js", "inherits/index.js");
 require.alias("balloonsjs-extend/index.js", "balloonsjs-inherits/deps/extend/index.js");
 require.alias("balloonsjs-extend/index.js", "balloonsjs-inherits/deps/extend/index.js");
 require.alias("balloonsjs-extend/index.js", "balloonsjs-extend/index.js");
-
 require.alias("balloonsjs-inherits/index.js", "balloonsjs-inherits/index.js");
-
-require.alias("balloonsjs-EventEmitter/index.js", "balloon/deps/EventEmitter/index.js");
-require.alias("balloonsjs-EventEmitter/index.js", "balloon/deps/EventEmitter/index.js");
+require.alias("balloonsjs-EventEmitter/index.js", "balloons/deps/EventEmitter/index.js");
+require.alias("balloonsjs-EventEmitter/index.js", "balloons/deps/EventEmitter/index.js");
 require.alias("balloonsjs-EventEmitter/index.js", "EventEmitter/index.js");
 require.alias("balloonsjs-EventEmitter/index.js", "balloonsjs-EventEmitter/index.js");
-
-require.alias("balloonsjs-Component/index.js", "balloon/deps/Component/index.js");
-require.alias("balloonsjs-Component/index.js", "balloon/deps/Component/index.js");
+require.alias("balloonsjs-Component/index.js", "balloons/deps/Component/index.js");
+require.alias("balloonsjs-Component/index.js", "balloons/deps/Component/index.js");
 require.alias("balloonsjs-Component/index.js", "Component/index.js");
 require.alias("balloonsjs-clone/index.js", "balloonsjs-Component/deps/clone/index.js");
 require.alias("balloonsjs-clone/index.js", "balloonsjs-Component/deps/clone/index.js");
 require.alias("balloonsjs-clone/index.js", "balloonsjs-clone/index.js");
-
 require.alias("balloonsjs-extend/index.js", "balloonsjs-Component/deps/extend/index.js");
 require.alias("balloonsjs-extend/index.js", "balloonsjs-Component/deps/extend/index.js");
 require.alias("balloonsjs-extend/index.js", "balloonsjs-extend/index.js");
-
 require.alias("balloonsjs-inherits/index.js", "balloonsjs-Component/deps/inherits/index.js");
 require.alias("balloonsjs-inherits/index.js", "balloonsjs-Component/deps/inherits/index.js");
 require.alias("balloonsjs-extend/index.js", "balloonsjs-inherits/deps/extend/index.js");
 require.alias("balloonsjs-extend/index.js", "balloonsjs-inherits/deps/extend/index.js");
 require.alias("balloonsjs-extend/index.js", "balloonsjs-extend/index.js");
-
 require.alias("balloonsjs-inherits/index.js", "balloonsjs-inherits/index.js");
-
 require.alias("balloonsjs-EventEmitter/index.js", "balloonsjs-Component/deps/EventEmitter/index.js");
 require.alias("balloonsjs-EventEmitter/index.js", "balloonsjs-Component/deps/EventEmitter/index.js");
 require.alias("balloonsjs-EventEmitter/index.js", "balloonsjs-EventEmitter/index.js");
-
 require.alias("balloonsjs-Component/index.js", "balloonsjs-Component/index.js");
-
-require.alias("balloon/index.js", "balloon/index.js");
-
-if (typeof exports == "object") {
-  module.exports = require("balloon");
+require.alias("balloons/index.js", "balloons/index.js");if (typeof exports == "object") {
+  module.exports = require("balloons");
 } else if (typeof define == "function" && define.amd) {
-  define(function(){ return require("balloon"); });
+  define(function(){ return require("balloons"); });
 } else {
-  this["Q"] = require("balloon");
+  this["Q"] = require("balloons");
 }})();
