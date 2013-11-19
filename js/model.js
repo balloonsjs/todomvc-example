@@ -15,7 +15,7 @@
         this._collection = [];
     }
 
-    Q.component(Todo);
+    Q.observable(Todo);
 
     Todo.prototype.add = function (text) {
          var task = {

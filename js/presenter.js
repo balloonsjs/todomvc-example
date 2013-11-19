@@ -1,133 +1,115 @@
 (function (window) {
     'use strict';
 
-    function Presenter() {
+    var app = {},
+        footer = document.querySelector('#footer'),
+        count = document.querySelector('#todo-count'),
+        toggleAll = document.querySelector('#toggle-all'),
+        clearCompleted = document.querySelector('#clear-completed'),
+        completedCount = document.querySelector('#completed-count'),
+        todo = new Todo(),
+        template = new Templit('#view', '#todo-list');
 
-        // Defines a new Todo model
-        this.todo = new Todo();
+    // Defines user interaction
+    document.querySelector('#todoapp').addEventListener('click', function (eve) {
+        var el = eve.target,
+            status,
+            taskID;
 
-        this.template = new Templit('#view', '#todo-list');
+        if (el.className === 'destroy') {
+            taskID = parseInt(el.parentNode.parentNode.dataset.task, 10);
+            todo.remove(taskID);
+        }
 
-        // Defines user interaction
-        this.userEvents();
+        if (el.id === 'clear-completed') {
+            todo.remove('status', 'completed');
+        }
 
-        // Defines model events
-        this.modelEvents();
+        if (el.className === 'toggle') {
+            taskID = parseInt(el.parentNode.parentNode.dataset.task, 10);
+            todo.toggle(taskID);
+        }
 
-    };
+        if (el.id === 'toggle-all') {
+            todo.toggleAll(el.checked);
+        }
+    });
 
-    Presenter.prototype.userEvents = function () {
+    document.querySelector('#new-todo').addEventListener('keyup', function (eve) {
+        if (this.value === '') {
+            return;
+        }
 
-        var that = this;
+        // ENTER key
+        if (eve.keyCode === 13) {
+            todo.add(this.value);
+            this.value = '';
+            this.blur();
+        }
 
-        document.querySelector('#todoapp').addEventListener('click', function (eve) {
-            var el = eve.target,
-                status,
-                taskID;
+        // ESC key
+        if (eve.keyCode === 27) {
+            this.value = '';
+            this.blur();
+        }
+    });
 
-            if (el.className === 'destroy') {
-                taskID = parseInt(el.parentNode.parentNode.dataset.task, 10);
-                that.todo.remove(taskID);
-            }
+    // Defines model events
+    todo.on('add', function() {
+        template.render(todo.items());
 
-            if (el.id === 'clear-completed') {
-                that.todo.remove('status', 'completed');
-            }
+        toggleAll.removeAttribute('hidden');
+        toggleAll.checked = false;
 
-            if (el.className === 'toggle') {
-                taskID = parseInt(el.parentNode.parentNode.dataset.task, 10);
-                that.todo.toggle(taskID);
-            }
+        footer.removeAttribute('hidden');
 
-            if (el.id === 'toggle-all') {
-                that.todo.toggleAll(el.checked);
-            }
-        });
+        count.innerHTML = todo.count('active');
+    });
 
-        document.querySelector('#new-todo').addEventListener('keyup', function (eve) {
-            if (this.value === '') {
-                return;
-            }
+    todo.on('edit', function() {
+        template.render(todo.items());
+    });
 
-            // ENTER key
-            if (eve.keyCode === 13) {
-                that.todo.add(this.value);
-                this.value = '';
-                this.blur();
-            }
+    todo.on('remove', function() {
+        template.render(todo.items());
 
-            // ESC key
-            if (eve.keyCode === 27) {
-                this.value = '';
-                this.blur();
-            }
-        });
-    };
+        count.innerHTML = todo.count('active');
 
-    Presenter.prototype.modelEvents = function () {
+        completedCount.innerHTML = todo.count('completed');
 
-        var that = this,
-            footer = document.querySelector('#footer'),
-            count = document.querySelector('#todo-count'),
-            toggleAll = document.querySelector('#toggle-all'),
-            clearCompleted = document.querySelector('#clear-completed'),
-            completedCount = document.querySelector('#completed-count');
+        if (todo.count('completed') === 0) {
+            clearCompleted.setAttribute('hidden');
+        }
 
-        this.todo.on('add', function() {
-            that.template.render(that.todo.items());
-
-            toggleAll.removeAttribute('hidden');
+        if (todo.size() === 0) {
             toggleAll.checked = false;
+            toggleAll.setAttribute('hidden');
+            footer.setAttribute('hidden');
+        }
 
-            footer.removeAttribute('hidden');
+    });
 
-            count.innerHTML = that.todo.count('active');
-        });
+    todo.on('toggle', function () {
 
-        this.todo.on('edit', function() {
-            that.template.render(that.todo.items());
-        });
+        template.render(todo.items());
 
-        this.todo.on('remove', function() {
-            that.template.render(that.todo.items());
+        count.innerHTML = todo.count('active');
 
-            count.innerHTML = that.todo.count('active');
+        completedCount.innerHTML = todo.count('completed');
 
-            completedCount.innerHTML = that.todo.count('completed');
+        if (todo.count('completed') === 0) {
+            clearCompleted.setAttribute('hidden', 'hidden');
 
-            if (that.todo.count('completed') === 0) {
-                clearCompleted.setAttribute('hidden');
-            }
-
-            if (that.todo.size() === 0) {
-                toggleAll.checked = false;
-                toggleAll.setAttribute('hidden');
-                footer.setAttribute('hidden');
-            }
-
-        });
-
-        this.todo.on('toggle', function () {
-
-            that.template.render(that.todo.items());
-
-            count.innerHTML = that.todo.count('active');
-
-            completedCount.innerHTML = that.todo.count('completed');
-
-            if (that.todo.count('completed') === 0) {
-                clearCompleted.setAttribute('hidden', 'hidden');
-
-            } else {
-                clearCompleted.removeAttribute('hidden');
-                toggleAll.checked = (that.todo.count('active') === 0);
-            }
-        });
-
-        return this;
-    }
+        } else {
+            clearCompleted.removeAttribute('hidden');
+            toggleAll.checked = (todo.count('active') === 0);
+        }
+    });
 
     // Expose app presenter
-    window.app = new Presenter();
+    window.app = {
+        'model': todo,
+        'template': template
+    };
 
 }(this));
